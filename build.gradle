@@ -1,0 +1,37 @@
+// Copyright 2023 Federico Valeri.
+// Licensed under the Apache License 2.0 (see LICENSE file).
+
+plugins {
+  id 'java'
+}
+
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+  implementation 'net.sourceforge.htmlunit:htmlunit:2.61.0'
+  implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.3'
+  testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+  testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+}
+
+// configuring the jar task to create a runnable JAR
+jar {
+  manifest {
+    attributes 'Main-Class': mainFqcn
+  }
+  from {
+    configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+  }
+  duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+// build for a target Java version (since JDK 9)
+tasks.withType(JavaCompile) {
+  options.release = Integer.valueOf(javaRelease)
+}
+
+test {
+  useJUnitPlatform()
+}
