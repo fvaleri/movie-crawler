@@ -2,7 +2,7 @@
  * Copyright 2023 Federico Valeri.
  * Licensed under the Apache License 2.0 (see LICENSE file).
  */
-package it.fvaleri.example;
+package it.fvaleri.movie;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-import it.fvaleri.example.model.Movie;
+import it.fvaleri.movie.model.Movie;
 
 public class FileCacheTest {
     private FileCache cache = new FileCache();

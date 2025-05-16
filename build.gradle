@@ -5,6 +5,9 @@ plugins {
   id 'java'
 }
 
+group = theGroup
+version = theVersion
+
 repositories {
   mavenCentral()
 }
@@ -12,14 +15,14 @@ repositories {
 dependencies {
   implementation 'net.sourceforge.htmlunit:htmlunit:2.61.0'
   implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.3'
-  testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
-  testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+  testImplementation 'org.junit.jupiter:junit-jupiter:5.9.2'
+  testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
 // configuring the jar task to create a runnable JAR
 jar {
   manifest {
-    attributes 'Main-Class': mainFqcn
+    attributes 'Main-Class': theMainClass
   }
   from {
     configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
@@ -29,9 +32,13 @@ jar {
 
 // build for a target Java version (since JDK 9)
 tasks.withType(JavaCompile) {
-  options.release = Integer.valueOf(javaRelease)
+  options.release = Integer.valueOf(theJavaVersion)
 }
 
-test {
-  useJUnitPlatform()
+tasks.named('test', Test) {
+    useJUnitPlatform()
+
+    testLogging {
+        events "passed"
+    }
 }

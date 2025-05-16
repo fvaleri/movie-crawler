@@ -2,7 +2,7 @@
  * Copyright 2023 Federico Valeri.
  * Licensed under the Apache License 2.0 (see LICENSE file).
  */
-package it.fvaleri.example.crawler;
+package it.fvaleri.movie.crawler;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -10,8 +10,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gargoylesoftware.htmlunit.Page;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.WebResponse;
-import it.fvaleri.example.FileCache;
-import it.fvaleri.example.model.Movie;
+import it.fvaleri.movie.FileCache;
+import it.fvaleri.movie.model.Movie;
 
 import java.io.IOException;
 import java.net.URLEncoder;
