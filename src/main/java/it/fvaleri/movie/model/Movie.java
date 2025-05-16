@@ -2,7 +2,7 @@
  * Copyright 2023 Federico Valeri.
  * Licensed under the Apache License 2.0 (see LICENSE file).
  */
-package it.fvaleri.example.model;
+package it.fvaleri.movie.model;
 
 public record Movie(String title, int criticsScore, int audienceScore) {
     public Movie() {

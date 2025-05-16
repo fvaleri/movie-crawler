@@ -1,9 +1,40 @@
 // Copyright 2023 Federico Valeri.
 // Licensed under the Apache License 2.0 (see LICENSE file).
 
+import org.ajoberstar.grgit.Grgit
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath "org.ajoberstar.grgit:grgit-core:4.1.1"
+    }
+}
+
 plugins {
   id 'java'
 }
+
+ext {
+    repo = file("$rootDir/.git").isDirectory() ? Grgit.open(currentDir: project.getRootDir()) : null
+    commitId = determineCommitId()
+}
+
+def determineCommitId() {
+    def takeFromHash = 16
+    if (project.hasProperty('commitId')) {
+        commitId.take(takeFromHash)
+    } else if (repo != null) {
+        repo.head().id.take(takeFromHash)
+    } else {
+        "unknown"
+    }
+}
+
+group = theGroup
+version = theVersion
 
 repositories {
   mavenCentral()
@@ -12,26 +43,41 @@ repositories {
 dependencies {
   implementation 'net.sourceforge.htmlunit:htmlunit:2.61.0'
   implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.3'
-  testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
-  testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+  testImplementation 'org.junit.jupiter:junit-jupiter:5.9.2'
+  testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
-// configuring the jar task to create a runnable JAR
-jar {
-  manifest {
-    attributes 'Main-Class': mainFqcn
-  }
-  from {
-    configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
-  }
-  duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-}
+println("Building version $theVersion (commit id ${commitId == null ? "null" : commitId.take(8)}) using Java ${theJavaVersion} and Gradle $gradle.gradleVersion")
 
-// build for a target Java version (since JDK 9)
+// set target Java version and Java compiler args
 tasks.withType(JavaCompile) {
-  options.release = Integer.valueOf(javaRelease)
+  options.release = Integer.valueOf(theJavaVersion)
+  options.compilerArgs << "-encoding" << "UTF-8"
+  options.compilerArgs << "-Xlint:all"
+  options.compilerArgs << "-Xlint:-serial"
+  options.compilerArgs << "-Xlint:-try"
+  options.compilerArgs << "-Werror"
 }
 
+// print tests logs and outcome
 test {
-  useJUnitPlatform()
+    useJUnitPlatform()
+
+    testLogging {
+        showStandardStreams = true
+        testLogging.exceptionFormat = "full"
+        events = ["passed", "skipped", "failed"]
+        displayGranularity = 0
+    }
+}
+
+// create a runnable JAR
+jar {
+    manifest {
+        attributes 'Main-Class': theMainClass
+    }
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }

@@ -2,11 +2,11 @@
  * Copyright 2023 Federico Valeri.
  * Licensed under the Apache License 2.0 (see LICENSE file).
  */
-package it.fvaleri.example;
+package it.fvaleri.movie;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import it.fvaleri.example.model.Movie;
+import it.fvaleri.movie.model.Movie;
 
 import java.io.IOException;
 import java.nio.file.Files;

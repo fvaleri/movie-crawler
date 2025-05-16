@@ -2,12 +2,12 @@
  * Copyright 2023 Federico Valeri.
  * Licensed under the Apache License 2.0 (see LICENSE file).
  */
-package it.fvaleri.example;
+package it.fvaleri.movie;
 
 import com.gargoylesoftware.htmlunit.WebClient;
-import it.fvaleri.example.crawler.LookCrawler;
-import it.fvaleri.example.crawler.RottenCrawler;
-import it.fvaleri.example.model.Movie;
+import it.fvaleri.movie.crawler.LookCrawler;
+import it.fvaleri.movie.crawler.RottenCrawler;
+import it.fvaleri.movie.model.Movie;
 
 import java.util.Set;
 
@@ -18,10 +18,6 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        new Main().start();
-    }
-
-    private void start() {
         try (WebClient client = crateWebClient()) {
             FileCache cache = new FileCache();
             RottenCrawler rottenCrawler = new RottenCrawler(client, cache);
